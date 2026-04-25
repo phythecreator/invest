@@ -3,295 +3,285 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Equity Evaluator · Análise Fundamentalista</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+<title>Equity Evaluator · Analista Financeiro</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --paper:    #f5f0e8;
-    --paper2:   #ede8de;
-    --paper3:   #e4ddd0;
-    --ink:      #1a1612;
-    --ink2:     #3d3530;
-    --ink3:     #6b6358;
-    --gold:     #8b6914;
-    --gold2:    #c49a27;
-    --rule:     #c8bfb0;
-    --rule2:    #b0a595;
-    --pass:     #2d5a27;
-    --pass-bg:  #eef5ed;
-    --fail:     #7a1f1f;
-    --fail-bg:  #f9eeee;
+    --paper:    #fdfcf8;
+    --paper2:   #f4f1ea;
+    --ink:      #0b0c10;
+    --ink2:     #1f2833;
+    --ink3:     #454a52;
+    --accent:   #8b0000; /* Wall street journal red */
+    --gold:     #a67c00;
+    --rule:     #d5d1c8;
+    --rule-dark:#1f2833;
+    --pass:     #1a5d1a;
+    --pass-bg:  #eaf4ea;
+    --fail:     #8b0000;
+    --fail-bg:  #f8eaea;
+    --warn:     #b8860b;
+    --warn-bg:  #fbf5e6;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { font-size: 16px; }
+  html { font-size: 16px; scroll-behavior: smooth; }
 
   body {
     background: var(--paper);
     color: var(--ink);
     font-family: 'EB Garamond', Georgia, serif;
     font-size: 16px;
-    line-height: 1.5;
+    line-height: 1.6;
     min-height: 100vh;
   }
 
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 27px,
-      rgba(139,105,20,0.04) 27px,
-      rgba(139,105,20,0.04) 28px
-    );
-    pointer-events: none;
-    z-index: 0;
-  }
-
   .page {
-    max-width: 860px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 0 32px 100px;
-    position: relative;
-    z-index: 1;
+    background-color: var(--paper);
+    box-shadow: 0 0 40px rgba(0,0,0,0.03);
+    border-left: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+    min-height: 100vh;
   }
 
   /* MASTHEAD */
   .masthead {
-    border-bottom: 3px double var(--rule2);
-    padding: 44px 0 20px;
+    border-bottom: 4px solid var(--ink);
+    padding: 60px 0 30px;
     text-align: center;
+    position: relative;
+  }
+  
+  .masthead::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--ink);
   }
 
-  .masthead-eyebrow {
-    font-family: 'Source Code Pro', monospace;
+  .date-header {
+    font-family: 'Space Mono', monospace;
     font-size: 10px;
-    letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ink3);
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 10px;
+    margin-bottom: 30px;
   }
 
   .masthead-title {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(32px, 6vw, 58px);
-    font-weight: 700;
-    letter-spacing: -0.01em;
+    font-size: clamp(40px, 7vw, 72px);
+    font-weight: 900;
+    letter-spacing: -0.02em;
     color: var(--ink);
-    line-height: 1.05;
-  }
-
-  .masthead-title em {
-    font-style: italic;
-    font-weight: 400;
-    color: var(--gold);
-  }
-
-  .masthead-ornament {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 14px 0 10px;
-    color: var(--rule2);
-    font-size: 10px;
-    letter-spacing: 0.2em;
-  }
-
-  .masthead-ornament::before,
-  .masthead-ornament::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--rule2);
+    line-height: 1;
+    text-transform: uppercase;
   }
 
   .masthead-sub {
     font-family: 'EB Garamond', serif;
     font-style: italic;
-    font-size: 15px;
-    color: var(--ink3);
-    padding-bottom: 20px;
+    font-size: 18px;
+    color: var(--ink2);
+    margin-top: 15px;
   }
 
   /* SETUP */
   .setup-block {
-    border-bottom: 1px solid var(--rule);
-    padding: 28px 0;
+    padding: 40px 0;
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: 48px;
+    gap: 40px;
     align-items: end;
   }
 
-  @media (max-width: 560px) {
-    .setup-block { grid-template-columns: 1fr; gap: 20px; }
+  @media (max-width: 600px) {
+    .setup-block { grid-template-columns: 1fr; gap: 24px; }
   }
 
   .field-label {
     display: block;
-    font-family: 'Source Code Pro', monospace;
-    font-size: 9px;
-    letter-spacing: 0.22em;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--ink3);
-    margin-bottom: 5px;
+    color: var(--ink2);
+    margin-bottom: 8px;
   }
 
   .field-input {
     background: transparent;
     border: none;
-    border-bottom: 1.5px solid var(--ink2);
+    border-bottom: 2px solid var(--ink);
     color: var(--ink);
     font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    font-weight: 600;
-    padding: 4px 0;
+    font-size: 28px;
+    font-weight: 700;
+    padding: 8px 0;
     outline: none;
     width: 100%;
     transition: border-color 0.2s;
+    border-radius: 0;
   }
 
-  .field-input::placeholder { color: var(--rule2); font-weight: 400; font-style: italic; }
-  .field-input:focus { border-color: var(--gold); }
+  .field-input::placeholder { color: var(--rule); font-weight: 400; font-style: italic; }
+  .field-input:focus { border-color: var(--accent); }
 
   .sector-toggle {
     display: flex;
-    border: 1px solid var(--rule2);
-    overflow: hidden;
+    border: 2px solid var(--ink);
   }
 
   .sector-btn {
-    padding: 8px 22px;
+    padding: 12px 24px;
     background: transparent;
     border: none;
-    border-right: 1px solid var(--rule2);
-    font-family: 'Source Code Pro', monospace;
-    font-size: 11px;
-    letter-spacing: 0.1em;
+    border-right: 2px solid var(--ink);
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: var(--ink3);
+    color: var(--ink);
     cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
+    transition: all 0.2s;
   }
 
   .sector-btn:last-child { border-right: none; }
+  .sector-btn:hover { background: var(--paper2); }
   .sector-btn.active { background: var(--ink); color: var(--paper); }
 
   /* SECTION */
   .section-head {
-    display: grid;
-    grid-template-columns: 1fr auto;
+    display: flex;
+    justify-content: space-between;
     align-items: baseline;
-    padding: 22px 0 8px;
+    padding: 30px 0 10px;
     border-bottom: 2px solid var(--ink);
+    margin-bottom: 5px;
   }
 
   .section-head-title {
     font-family: 'Playfair Display', serif;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.18em;
+    font-size: 18px;
+    font-weight: 700;
     text-transform: uppercase;
     color: var(--ink);
-  }
-
-  .section-head-count {
-    font-family: 'Source Code Pro', monospace;
-    font-size: 10px;
-    color: var(--ink3);
-    letter-spacing: 0.1em;
   }
 
   /* TABLE HEADER */
   .table-head {
     display: grid;
-    grid-template-columns: 28px 1fr 160px 110px 28px;
-    padding: 6px 0;
-    border-bottom: 1px solid var(--rule);
+    grid-template-columns: 35px 1fr 180px 140px 35px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule-dark);
+    background-color: var(--paper2);
   }
 
   .th {
-    font-family: 'Source Code Pro', monospace;
-    font-size: 9px;
-    letter-spacing: 0.18em;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--ink3);
-    padding: 0 8px;
+    color: var(--ink);
+    padding: 0 12px;
   }
-
   .th.right { text-align: right; }
 
   /* ROWS */
-  .criteria-list { margin-bottom: 24px; }
+  .criteria-list { margin-bottom: 40px; }
 
   .criterion-row {
     display: grid;
-    grid-template-columns: 28px 1fr 160px 110px 28px;
+    grid-template-columns: 35px 1fr 180px 140px 35px;
     align-items: stretch;
     border-bottom: 1px solid var(--rule);
-    min-height: 50px;
-    transition: background 0.12s;
+    min-height: 60px;
+    transition: background 0.2s;
   }
 
-  .criterion-row:hover { background: rgba(139,105,20,0.05); }
+  .criterion-row:hover { background: var(--paper2); }
   .criterion-row.pass { background: var(--pass-bg); }
   .criterion-row.fail { background: var(--fail-bg); }
 
   .cr-n {
-    font-family: 'Source Code Pro', monospace;
-    font-size: 10px;
-    color: var(--rule2);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--ink3);
     display: flex;
     align-items: center;
     justify-content: center;
     border-right: 1px solid var(--rule);
+    font-weight: 700;
   }
 
   .cr-info {
-    padding: 9px 12px;
-    border-right: 1px solid var(--rule);
+    padding: 12px 16px;
+    border-right: 1px dotted var(--rule);
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
 
   .cr-name {
-    font-family: 'EB Garamond', serif;
-    font-size: 15px;
-    font-weight: 500;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
     color: var(--ink);
     line-height: 1.2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tag-crit {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2px 6px;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
   }
 
   .cr-desc {
     font-family: 'EB Garamond', serif;
-    font-style: italic;
-    font-size: 12px;
+    font-size: 13px;
     color: var(--ink3);
-    line-height: 1.3;
+    margin-top: 2px;
   }
 
   .cr-ideal-cell {
-    padding: 0 12px;
-    border-right: 1px solid var(--rule);
+    padding: 0 16px;
+    border-right: 1px dotted var(--rule);
     display: flex;
     align-items: center;
   }
 
   .cr-ideal {
-    font-family: 'Source Code Pro', monospace;
-    font-size: 11px;
-    color: var(--gold);
-    line-height: 1.4;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--ink2);
+    font-weight: 700;
   }
 
   .cr-input-cell {
     border-right: 1px solid var(--rule);
     display: flex;
     align-items: center;
+    background: #fff;
   }
 
   .cr-input {
@@ -299,293 +289,232 @@
     height: 100%;
     background: transparent;
     border: none;
-    font-family: 'Source Code Pro', monospace;
-    font-size: 14px;
-    font-weight: 500;
+    font-family: 'Space Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
     color: var(--ink);
     text-align: right;
-    padding: 0 12px;
+    padding: 0 16px;
     outline: none;
   }
 
-  .cr-input::placeholder { color: var(--rule); font-size: 20px; }
-  .cr-input:focus { background: rgba(139,105,20,0.06); }
+  .cr-input:focus { background: var(--paper2); }
 
   .cr-status {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Source Code Pro', monospace;
-    font-size: 12px;
-    color: var(--rule2);
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    color: var(--rule);
+    font-weight: 700;
   }
 
-  .criterion-row.pass .cr-status { color: var(--pass); font-weight: 500; }
-  .criterion-row.fail .cr-status { color: var(--fail); font-weight: 500; }
+  .criterion-row.pass .cr-status { color: var(--pass); }
+  .criterion-row.fail .cr-status { color: var(--fail); }
 
-  /* NIM */
-  .nim-toggle {
-    display: flex;
-    width: 100%;
-    height: 100%;
-  }
-
+  /* NIM TOGGLE */
+  .nim-toggle { display: flex; width: 100%; height: 100%; }
   .nim-btn {
-    flex: 1;
-    background: transparent;
-    border: none;
-    border-right: 1px solid var(--rule);
-    font-family: 'Source Code Pro', monospace;
-    font-size: 9px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink3);
-    cursor: pointer;
-    transition: background 0.12s;
+    flex: 1; background: transparent; border: none; border-right: 1px solid var(--rule);
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; text-transform: uppercase;
+    color: var(--ink3); cursor: pointer; transition: all 0.2s;
   }
-
   .nim-btn:last-child { border-right: none; }
-  .nim-btn:hover { background: rgba(139,105,20,0.08); }
-  .nim-btn.sel-pass { background: var(--pass-bg); color: var(--pass); font-weight: 500; }
-  .nim-btn.sel-fail { background: var(--fail-bg); color: var(--fail); font-weight: 500; }
+  .nim-btn:hover { background: var(--paper2); }
+  .nim-btn.sel-pass { background: var(--pass); color: white; }
+  .nim-btn.sel-fail { background: var(--fail); color: white; }
 
   /* CTA */
   .cta-row {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
-    gap: 24px;
-    padding: 18px 0 0;
-    border-top: 2px solid var(--ink);
+    padding: 30px 0;
+    border-top: 4px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
   }
 
   .cta-note {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
-    font-size: 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
     color: var(--ink3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .evaluate-btn {
-    background: var(--ink);
-    color: var(--paper);
+    background: var(--accent);
+    color: #fff;
     border: none;
-    font-family: 'Source Code Pro', monospace;
-    font-size: 11px;
-    letter-spacing: 0.2em;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    padding: 13px 32px;
+    padding: 16px 40px;
     cursor: pointer;
-    transition: background 0.15s;
+    transition: background 0.2s;
+    box-shadow: 4px 4px 0 var(--ink);
   }
 
-  .evaluate-btn:hover { background: var(--ink2); }
+  .evaluate-btn:hover { background: var(--ink); transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+  .evaluate-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0 var(--ink); }
 
-  /* RESULTS */
-  .results { display: none; margin-top: 52px; }
-  .results.visible { display: block; animation: fadeIn 0.35s ease; }
+  /* RESULTS / REPORT */
+  .results { display: none; margin-top: 60px; padding-bottom: 40px; }
+  .results.visible { display: block; animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(14px); }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(40px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .sep { text-align: center; color: var(--gold); letter-spacing: 0.3em; font-size: 13px; padding: 12px 0; }
-
-  .verdict-block {
-    border-top: 3px double var(--ink);
-    border-bottom: 3px double var(--ink);
-    padding: 36px 0 32px;
-    text-align: center;
-    margin-bottom: 32px;
+  .report-container {
+    border: 2px solid var(--ink);
+    background: #fff;
+    padding: 40px;
+    position: relative;
   }
 
-  .verdict-eyebrow {
-    font-family: 'Source Code Pro', monospace;
-    font-size: 9px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
-  .verdict-eyebrow.good { color: var(--pass); }
-  .verdict-eyebrow.bad { color: var(--fail); }
-
-  .verdict-name {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(28px, 5vw, 46px);
+  .report-container::before {
+    content: 'CONFIDENCIAL';
+    position: absolute;
+    top: -12px;
+    left: 40px;
+    background: var(--paper);
+    padding: 0 10px;
+    font-family: 'Space Mono', monospace;
     font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+  }
+
+  .report-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .report-company {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 900;
     color: var(--ink);
-    line-height: 1.05;
-    margin-bottom: 4px;
-  }
-
-  .verdict-sub {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
-    font-size: 15px;
-    color: var(--ink3);
-    margin-bottom: 24px;
-  }
-
-  .score-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    margin-bottom: 18px;
-    flex-wrap: wrap;
-  }
-
-  .score-pill {
-    font-family: 'Source Code Pro', monospace;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    padding: 4px 16px;
-    border: 1px solid;
-  }
-
-  .score-pill.pass { border-color: var(--pass); color: var(--pass); background: var(--pass-bg); }
-  .score-pill.fail { border-color: var(--fail); color: var(--fail); background: var(--fail-bg); }
-  .score-pill.neutral { border-color: var(--rule2); color: var(--ink3); }
-
-  .verdict-bar-wrap {
-    max-width: 420px;
-    margin: 0 auto 22px;
-    height: 2px;
-    background: var(--rule);
-  }
-
-  .verdict-bar-fill {
-    height: 100%;
-    background: var(--pass);
-    transition: width 1s cubic-bezier(0.4,0,0.2,1);
-  }
-
-  .verdict-bar-fill.bad { background: var(--fail); }
-
-  .verdict-opinion {
-    font-family: 'EB Garamond', serif;
-    font-size: 16px;
-    line-height: 1.7;
-    color: var(--ink2);
-    max-width: 560px;
-    margin: 0 auto;
-  }
-
-  /* BREAKDOWN */
-  .breakdown-label {
-    font-family: 'Source Code Pro', monospace;
-    font-size: 9px;
-    letter-spacing: 0.22em;
+    line-height: 1.1;
+    margin-bottom: 8px;
     text-transform: uppercase;
-    color: var(--ink3);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
     border-top: 1px solid var(--rule);
     border-bottom: 1px solid var(--rule);
-    padding: 7px 0;
-    margin-bottom: 1px;
+    padding: 20px 0;
   }
 
-  .breakdown-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1px;
-    background: var(--rule);
-    border: 1px solid var(--rule);
-    margin-bottom: 28px;
+  .stat-box { text-align: center; border-right: 1px dotted var(--rule); }
+  .stat-box:last-child { border-right: none; }
+  
+  .stat-value { font-family: 'Space Mono', monospace; font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 5px; }
+  .stat-value.pass { color: var(--pass); }
+  .stat-value.fail { color: var(--fail); }
+  .stat-label { font-family: 'Space Mono', monospace; font-size: 10px; text-transform: uppercase; color: var(--ink3); letter-spacing: 0.1em; }
+
+  .analysis-section {
+    background: var(--paper2);
+    padding: 24px;
+    border-left: 4px solid var(--ink);
+    margin-bottom: 40px;
   }
 
-  .bd-item {
-    background: var(--paper);
-    padding: 11px 14px;
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-  }
-
-  .bd-item.pass { background: var(--pass-bg); }
-  .bd-item.fail { background: var(--fail-bg); }
-  .bd-item.skip { opacity: 0.45; }
-
-  .bd-icon {
-    font-family: 'Source Code Pro', monospace;
-    font-size: 11px;
-    font-weight: 500;
-    flex-shrink: 0;
-    padding-top: 2px;
-    width: 14px;
-  }
-
-  .bd-icon.pass { color: var(--pass); }
-  .bd-icon.fail { color: var(--fail); }
-  .bd-icon.skip { color: var(--rule2); }
-
-  .bd-name {
-    font-family: 'EB Garamond', serif;
-    font-size: 14px;
-    font-weight: 500;
+  .analysis-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
     color: var(--ink);
-    line-height: 1.2;
-    margin-bottom: 1px;
   }
 
-  .bd-detail {
-    font-family: 'Source Code Pro', monospace;
-    font-size: 10px;
-    color: var(--ink3);
-    line-height: 1.4;
-  }
-
-  .bd-detail .uval { color: var(--ink); }
-
-  .reset-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid var(--rule);
-    padding-top: 20px;
-  }
-
-  .reset-note {
+  .analysis-text {
     font-family: 'EB Garamond', serif;
-    font-style: italic;
-    font-size: 13px;
-    color: var(--ink3);
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--ink2);
   }
+
+  .final-decision-box {
+    text-align: center;
+    padding: 30px;
+    border: 4px solid var(--ink);
+    background: var(--paper);
+  }
+
+  .fd-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--ink3);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .fd-verdict {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+  }
+
+  .verdict-approve { color: var(--pass); }
+  .verdict-reject { color: var(--fail); }
+  .verdict-watch { color: var(--warn); }
 
   .reset-btn {
+    display: block;
+    width: 100%;
     background: transparent;
-    border: 1px solid var(--rule2);
-    color: var(--ink3);
-    font-family: 'Source Code Pro', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
-    padding: 9px 22px;
+    padding: 16px;
     cursor: pointer;
-    transition: all 0.15s;
+    margin-top: 40px;
+    transition: all 0.2s;
   }
-
-  .reset-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .reset-btn:hover { background: var(--ink); color: var(--paper); }
 </style>
 </head>
 <body>
 <div class="page">
 
   <header class="masthead">
-    <div class="masthead-eyebrow">Análise Fundamentalista · Equity Research</div>
-    <h1 class="masthead-title">Avaliador de <em>Empresas</em></h1>
-    <div class="masthead-ornament">✦ &nbsp; Banca &amp; Tecnologia &nbsp; ✦</div>
-    <p class="masthead-sub">Introduza os dados reais da empresa e obtenha um diagnóstico baseado em critérios institucionais</p>
+    <div class="date-header">
+      <span>Volume I. No. 1</span>
+      <span id="currentDate"></span>
+    </div>
+    <h1 class="masthead-title">The Equity<br>Evaluator</h1>
+    <p class="masthead-sub">Análise Fundamentalista & Diagnóstico de Qualidade Institucional</p>
   </header>
 
   <div class="setup-block">
     <div>
-      <label class="field-label" for="companyName">Empresa</label>
-      <input class="field-input" type="text" id="companyName" placeholder="Nome da empresa…" autocomplete="off">
+      <label class="field-label" for="companyName">Nome da Entidade</label>
+      <input class="field-input" type="text" id="companyName" placeholder="Ex: JPMorgan Chase..." autocomplete="off">
     </div>
     <div>
-      <label class="field-label">Sector</label>
+      <label class="field-label">Setor de Atividade</label>
       <div class="sector-toggle">
         <button class="sector-btn active" onclick="setSector('bank')">Banca</button>
         <button class="sector-btn" onclick="setSector('tech')">Tecnologia</button>
@@ -596,58 +525,77 @@
   <div id="criteriaSection"></div>
 
   <div class="cta-row">
-    <span class="cta-note">Campos em branco são excluídos da contagem</span>
-    <button class="evaluate-btn" onclick="evaluate()">Avaliar &rarr;</button>
+    <span class="cta-note">Parâmetros em branco serão omitidos do cálculo final.</span>
+    <button class="evaluate-btn" onclick="evaluateStock()">Avaliar Risco &rarr;</button>
   </div>
 
   <div class="results" id="results">
-    <div class="sep">— ✦ —</div>
-    <div class="verdict-block">
-      <div class="verdict-eyebrow" id="verdictEyebrow"></div>
-      <div class="verdict-name" id="verdictName"></div>
-      <div class="verdict-sub" id="verdictSub"></div>
-      <div class="score-row" id="scoreRow"></div>
-      <div class="verdict-bar-wrap"><div class="verdict-bar-fill" id="verdictBar" style="width:0%"></div></div>
-      <p class="verdict-opinion" id="verdictOpinion"></p>
-    </div>
-    <div class="breakdown-label">Detalhe por Critério</div>
-    <div class="breakdown-grid" id="breakdownGrid"></div>
-    <div class="reset-row">
-      <span class="reset-note">Os dados introduzidos não são guardados</span>
-      <button class="reset-btn" onclick="resetAll()">Nova Avaliação</button>
+    <div class="report-container">
+      <div class="report-header">
+        <div class="report-company" id="repCompany"></div>
+        <div class="fd-label" id="repSector"></div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-value pass" id="statPass">0</div>
+          <div class="stat-label">Critérios Aprovados</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value fail" id="statFail">0</div>
+          <div class="stat-label">Critérios Reprovados</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="statPct">0%</div>
+          <div class="stat-label">Taxa de Sucesso</div>
+        </div>
+      </div>
+
+      <div class="analysis-section">
+        <div class="analysis-title">Diagnóstico de Risco</div>
+        <div class="analysis-text" id="riskAnalysis"></div>
+      </div>
+
+      <div class="final-decision-box">
+        <div class="fd-label">Decisão Final do Comité</div>
+        <div class="fd-verdict" id="finalVerdict"></div>
+      </div>
+      
+      <button class="reset-btn" onclick="resetAll()">Gerar Nova Análise</button>
     </div>
   </div>
 
 </div>
 <script>
+document.getElementById('currentDate').textContent = new Date().toLocaleDateString('pt-PT', { year: 'numeric', month: 'long', day: 'numeric' });
+
 const BANK = [
-  {id:'roe',    name:'ROE',                 ideal:'> 15%',             desc:'Rentabilidade do capital próprio',             unit:'%', check:v=>v>15,            nim:false},
-  {id:'roa',    name:'ROA',                 ideal:'> 1.0%',            desc:'Retorno sobre os activos totais',              unit:'%', check:v=>v>1.0,           nim:false},
-  {id:'eff',    name:'Efficiency Ratio',    ideal:'≤ 55%',             desc:'Custo operacional — quanto menor, melhor',     unit:'%', check:v=>v<=55,           nim:false},
-  {id:'nim',    name:'NIM',                 ideal:'Estável ou a subir',desc:'Margem de juro líquida — tendência',           unit:'',  check:null,               nim:true },
-  {id:'npl',    name:'NPL (90 dias)',        ideal:'< 3.5%',            desc:'Taxa de crédito malparado',                   unit:'%', check:v=>v<3.5,           nim:false},
-  {id:'nplcov', name:'Cobertura NPL',       ideal:'> 200%',            desc:'Reservas sobre o crédito malparado',          unit:'%', check:v=>v>200,           nim:false},
-  {id:'pb',     name:'P/Book (P/VP)',       ideal:'1.0× a 1.6×',      desc:'Preço relativo ao valor contabilístico',       unit:'x', check:v=>v>=1.0&&v<=1.6, nim:false},
-  {id:'cet1',   name:'CET1 (Tier 1)',       ideal:'> 12%',             desc:'Rácio de capital regulatório de segurança',   unit:'%', check:v=>v>12,            nim:false},
-  {id:'dep',    name:'Cresc. Depósitos',    ideal:'5% – 10% a.a.',     desc:'Crescimento anual dos depósitos',             unit:'%', check:v=>v>=5&&v<=10,    nim:false},
-  {id:'loan',   name:'Cresc. Empréstimos',  ideal:'Alinhado ao PIB',   desc:'Crescimento prudente da carteira de crédito', unit:'%', check:v=>v>=0&&v<=10,    nim:false},
-  {id:'ey',     name:'Earnings Yield',      ideal:'> 8%',              desc:'Lucro por acção vs. preço corrente',          unit:'%', check:v=>v>8,             nim:false},
-  {id:'dy',     name:'Dividend Yield',      ideal:'4% – 7%',           desc:'Rendimento real em dividendos',               unit:'%', check:v=>v>=4&&v<=7,     nim:false},
-  {id:'payout', name:'Payout Ratio',        ideal:'40% – 60%',         desc:'Distribuição do lucro — equilíbrio ideal',    unit:'%', check:v=>v>=40&&v<=60,   nim:false},
-  {id:'peg',    name:'PEG Ratio',           ideal:'1.0× a 1.5×',      desc:'Preço justo ajustado ao crescimento',         unit:'x', check:v=>v>=1.0&&v<=1.5, nim:false},
+  {id:'roe',    name:'ROE',                 ideal:'> 15%',          desc:'Rentabilidade do capital próprio',              unit:'%', critical: true,  check:v=>v>15,            nim:false},
+  {id:'roa',    name:'ROA',                 ideal:'> 1.0%',         desc:'Retorno sobre os ativos totais',                unit:'%', critical: true,  check:v=>v>1.0,           nim:false},
+  {id:'eff',    name:'Efficiency Ratio',    ideal:'≤ 55%',          desc:'Custo operacional — quanto menor, melhor',      unit:'%', critical: false, check:v=>v<=55,           nim:false},
+  {id:'nim',    name:'NIM',                 ideal:'Subida',         desc:'Margem de juro líquida — tendência',            unit:'',  critical: true,  check:null,               nim:true },
+  {id:'npl',    name:'NPL (90 dias)',       ideal:'< 3.5%',         desc:'Taxa de crédito malparado',                     unit:'%', critical: true,  check:v=>v<3.5,           nim:false},
+  {id:'nplcov', name:'Cobertura NPL',       ideal:'> 200%',         desc:'Reservas sobre o crédito malparado',            unit:'%', critical: false, check:v=>v>200,           nim:false},
+  {id:'pb',     name:'P/Book (P/VP)',       ideal:'1.0× a 1.6×',    desc:'Preço relativo ao valor contabilístico',        unit:'x', critical: false, check:v=>v>=1.0&&v<=1.6,  nim:false},
+  {id:'cet1',   name:'CET1 (Tier 1)',       ideal:'> 12%',          desc:'Rácio de capital regulatório de segurança',     unit:'%', critical: true,  check:v=>v>12,            nim:false},
+  {id:'dep',    name:'Cresc. Depósitos',    ideal:'5% – 10%',       desc:'Crescimento anual dos depósitos',               unit:'%', critical: false, check:v=>v>=5&&v<=10,     nim:false},
+  {id:'loan',   name:'Cresc. Empréstimos',  ideal:'0% – 10%',       desc:'Crescimento prudente da carteira de crédito',   unit:'%', critical: false, check:v=>v>=0&&v<=10,     nim:false},
+  {id:'ey',     name:'Earnings Yield',      ideal:'> 8%',           desc:'Lucro por ação vs. preço corrente',             unit:'%', critical: false, check:v=>v>8,             nim:false},
+  {id:'dy',     name:'Dividend Yield',      ideal:'4% – 7%',        desc:'Rendimento real em dividendos',                 unit:'%', critical: false, check:v=>v>=4&&v<=7,      nim:false},
+  {id:'payout', name:'Payout Ratio',        ideal:'40% – 60%',      desc:'Distribuição do lucro — equilíbrio ideal',      unit:'%', critical: false, check:v=>v>=40&&v<=60,    nim:false},
 ];
 
 const TECH = [
-  {id:'gm',   name:'Margem Bruta',         ideal:'> 60%',             desc:'Escalabilidade do modelo de negócio',           unit:'%', check:v=>v>60,           nim:false},
-  {id:'rg',   name:'Crescimento Receita',  ideal:'> 15% a.a.',        desc:'Crescimento de dois dígitos é mínimo aceitável', unit:'%', check:v=>v>15,           nim:false},
-  {id:'r40',  name:'Regra dos 40',         ideal:'> 40',              desc:'Crescimento + Margem de Lucro combinados',      unit:'',  check:v=>v>40,           nim:false},
-  {id:'fcf',  name:'Margem FCF',           ideal:'> 20%',             desc:'Free Cash Flow como percentagem da receita',    unit:'%', check:v=>v>20,           nim:false},
-  {id:'nrr',  name:'Net Retention Rate',   ideal:'> 110%',            desc:'Expansão da receita nos clientes existentes',   unit:'%', check:v=>v>110,          nim:false},
-  {id:'dlev', name:'Dívida Líq./EBITDA',  ideal:'< 1.5×',            desc:'Alavancagem — tech deve ter balanço limpo',     unit:'x', check:v=>v<1.5,          nim:false},
-  {id:'rnd',  name:'Investimento R&D',     ideal:'10% – 20% receita', desc:'Sustentabilidade da vantagem tecnológica',      unit:'%', check:v=>v>=10&&v<=20,   nim:false},
-  {id:'pe',   name:'P/L (P/E Ratio)',      ideal:'20× a 35×',         desc:'Múltiplo de lucros — qualidade tem prémio',    unit:'x', check:v=>v>=20&&v<=35,   nim:false},
-  {id:'peg2', name:'PEG Ratio',            ideal:'1.2× a 1.8×',      desc:'Preço justo ajustado ao crescimento',           unit:'x', check:v=>v>=1.2&&v<=1.8, nim:false},
-  {id:'sbc',  name:'SBC % da Receita',     ideal:'< 10%',             desc:'Diluição accionista via stock compensation',    unit:'%', check:v=>v<10,           nim:false},
+  {id:'gm',   name:'Margem Bruta',        ideal:'> 60%',            desc:'Escalabilidade do modelo de negócio',           unit:'%', critical: true,  check:v=>v>60,            nim:false},
+  {id:'rg',   name:'Cresc. Receita',      ideal:'> 15% a.a.',       desc:'Crescimento de dois dígitos é mínimo',          unit:'%', critical: true,  check:v=>v>15,            nim:false},
+  {id:'r40',  name:'Regra dos 40',        ideal:'> 40',             desc:'Crescimento + Margem de Lucro combinados',      unit:'',  critical: true,  check:v=>v>40,            nim:false},
+  {id:'fcf',  name:'Margem FCF',          ideal:'> 20%',            desc:'Free Cash Flow como % da receita',              unit:'%', critical: true,  check:v=>v>20,            nim:false},
+  {id:'nrr',  name:'Net Retention',       ideal:'> 110%',           desc:'Expansão da receita nos clientes existentes',   unit:'%', critical: false, check:v=>v>110,           nim:false},
+  {id:'dlev', name:'Dívida Líq./EBITDA',  ideal:'< 1.5×',           desc:'Alavancagem — tech deve ter balanço limpo',     unit:'x', critical: true,  check:v=>v<1.5,           nim:false},
+  {id:'rnd',  name:'Investimento R&D',    ideal:'10% – 20%',        desc:'Sustentabilidade da vantagem tecnológica',      unit:'%', critical: false, check:v=>v>=10&&v<=20,    nim:false},
+  {id:'pe',   name:'P/L (P/E Ratio)',     ideal:'20× a 35×',        desc:'Múltiplo de lucros — qualidade tem prémio',     unit:'x', critical: false, check:v=>v>=20&&v<=35,    nim:false},
+  {id:'peg2', name:'PEG Ratio',           ideal:'1.2× a 1.8×',      desc:'Preço justo ajustado ao crescimento',           unit:'x', critical: false, check:v=>v>=1.2&&v<=1.8,  nim:false},
+  {id:'sbc',  name:'SBC % da Receita',    ideal:'< 10%',            desc:'Diluição acionista via stock compensation',     unit:'%', critical: false, check:v=>v<10,            nim:false},
 ];
 
 let sector = 'bank', nimVal = null;
@@ -663,14 +611,13 @@ function renderCriteria() {
   const list = sector==='bank' ? BANK : TECH;
   document.getElementById('criteriaSection').innerHTML = `
     <div class="section-head">
-      <span class="section-head-title">${sector==='bank'?'Critérios de Avaliação Bancária':'Critérios de Avaliação Tecnológica'}</span>
-      <span class="section-head-count">${list.length} PARÂMETROS</span>
+      <span class="section-head-title">${sector==='bank'?'Métricas Bancárias':'Métricas Tecnológicas'}</span>
     </div>
     <div class="table-head">
-      <div class="th"></div>
+      <div class="th">Nº</div>
       <div class="th">Parâmetro</div>
-      <div class="th">Valor Ideal</div>
-      <div class="th right">Valor Real</div>
+      <div class="th">Referência Institucional</div>
+      <div class="th right">Dado Introduzido</div>
       <div class="th"></div>
     </div>
     <div class="criteria-list">${list.map((c,i)=>renderRow(c,i)).join('')}</div>`;
@@ -678,23 +625,26 @@ function renderCriteria() {
 
 function renderRow(c, i) {
   const n = String(i+1).padStart(2,'0');
+  const tag = c.critical ? `<span class="tag-crit">CRÍTICO</span>` : '';
+  
   if (c.nim) return `
     <div class="criterion-row" id="row-${c.id}">
       <div class="cr-n">${n}</div>
-      <div class="cr-info"><div class="cr-name">${c.name}</div><div class="cr-desc">${c.desc}</div></div>
+      <div class="cr-info"><div class="cr-name">${c.name} ${tag}</div><div class="cr-desc">${c.desc}</div></div>
       <div class="cr-ideal-cell"><span class="cr-ideal">${c.ideal}</span></div>
       <div class="cr-input-cell">
         <div class="nim-toggle">
-          <button class="nim-btn" id="nim-up" onclick="setNim('pass')">↑ Sobe</button>
-          <button class="nim-btn" id="nim-dn" onclick="setNim('fail')">↓ Cai</button>
+          <button class="nim-btn" id="nim-up" onclick="setNim('pass')">Subida</button>
+          <button class="nim-btn" id="nim-dn" onclick="setNim('fail')">Queda</button>
         </div>
       </div>
       <div class="cr-status" id="status-${c.id}">—</div>
     </div>`;
+    
   return `
   <div class="criterion-row" id="row-${c.id}">
     <div class="cr-n">${n}</div>
-    <div class="cr-info"><div class="cr-name">${c.name}</div><div class="cr-desc">${c.desc}</div></div>
+    <div class="cr-info"><div class="cr-name">${c.name} ${tag}</div><div class="cr-desc">${c.desc}</div></div>
     <div class="cr-ideal-cell"><span class="cr-ideal">${c.ideal}</span></div>
     <div class="cr-input-cell">
       <input class="cr-input" type="number" id="val-${c.id}" placeholder="·" step="any" oninput="liveCheck('${c.id}')">
@@ -709,7 +659,7 @@ function setNim(result) {
   document.getElementById('nim-dn').className = 'nim-btn' + (result==='fail'?' sel-fail':'');
   const row = document.getElementById('row-nim');
   row.classList.remove('pass','fail'); row.classList.add(result);
-  document.getElementById('status-nim').textContent = result==='pass'?'✓':'✗';
+  document.getElementById('status-nim').textContent = result==='pass'?'PASS':'FAIL';
 }
 
 function liveCheck(id) {
@@ -722,68 +672,99 @@ function liveCheck(id) {
   if (isNaN(v)||el.value==='') { row.classList.remove('pass','fail'); st.textContent='—'; return; }
   const ok = c.check(v);
   row.classList.remove('pass','fail'); row.classList.add(ok?'pass':'fail');
-  st.textContent = ok?'✓':'✗';
+  st.textContent = ok?'PASS':'FAIL';
 }
 
-function evaluate() {
-  const name = document.getElementById('companyName').value.trim()||'Empresa';
+function evaluateStock() {
+  const name = document.getElementById('companyName').value.trim() || 'Entidade Não Identificada';
   const list = sector==='bank'?BANK:TECH;
-  let passed=0,failed=0,skipped=0;
-  const breakdown=[];
+  
+  let passed = 0, failed = 0, totalValid = 0;
+  let criticalFails = [];
+  let normalFails = [];
+
   for (const c of list) {
+    let isOk = null;
+    let hasValue = false;
+
     if (c.nim) {
-      if (nimVal===null) { skipped++; breakdown.push({...c,result:'skip',uval:'n/d'}); }
-      else { if(nimVal==='pass')passed++; else failed++; breakdown.push({...c,result:nimVal,uval:nimVal==='pass'?'A subir':'A cair'}); }
-      continue;
+      if (nimVal !== null) {
+        hasValue = true;
+        isOk = (nimVal === 'pass');
+      }
+    } else {
+      const el = document.getElementById('val-'+c.id);
+      const v = parseFloat(el.value);
+      if (!isNaN(v) && el.value !== '') {
+        hasValue = true;
+        isOk = c.check(v);
+      }
     }
-    const el = document.getElementById('val-'+c.id);
-    const v = parseFloat(el.value);
-    if (isNaN(v)||el.value==='') { skipped++; breakdown.push({...c,result:'skip',uval:'n/d'}); continue; }
-    const ok = c.check(v);
-    if(ok)passed++; else failed++;
-    breakdown.push({...c,result:ok?'pass':'fail',uval:v+(c.unit||'')});
+
+    if (hasValue) {
+      totalValid++;
+      if (isOk) {
+        passed++;
+      } else {
+        failed++;
+        if (c.critical) criticalFails.push(c.name);
+        else normalFails.push(c.name);
+      }
+    }
   }
-  const total = passed+failed;
-  const pct = total===0?0:Math.round((passed/total)*100);
-  const good = pct>=60;
-  const grade = pct>=80?'Qualidade Elevada':pct>=60?'Satisfatório':pct>=40?'Abaixo do Padrão':'Fundamentos Fracos';
 
-  document.getElementById('verdictEyebrow').className='verdict-eyebrow '+(good?'good':'bad');
-  document.getElementById('verdictEyebrow').textContent = good
-    ? '✦  Empresa de Qualidade Institucional'
-    : '✦  Empresa com Fundamentos Insuficientes';
-  document.getElementById('verdictName').textContent = name;
-  document.getElementById('verdictSub').textContent = (sector==='bank'?'Análise Bancária':'Análise Tecnológica') + '  ·  ' + grade + '  ·  ' + pct + '%';
+  // Prevenir divisão por zero se nada for preenchido
+  if (totalValid === 0) {
+    alert("Por favor, preencha pelo menos um critério para gerar o relatório.");
+    return;
+  }
 
-  document.getElementById('scoreRow').innerHTML = `
-    <span class="score-pill pass">${passed} Aprovados</span>
-    <span class="score-pill fail">${failed} Reprovados</span>
-    ${skipped?`<span class="score-pill neutral">${skipped} Sem dados</span>`:''}`;
+  const pct = Math.round((passed/totalValid)*100);
 
-  const bar = document.getElementById('verdictBar');
-  bar.className = 'verdict-bar-fill'+(good?'':' bad');
-  setTimeout(()=>{ bar.style.width=pct+'%'; },80);
+  // Lógica de Preocupação e Risco
+  let riskHTML = "";
+  let verdictText = "";
+  let verdictClass = "";
 
-  const ops = good ? [
-    `Com ${pct}% dos critérios aprovados, ${name} apresenta fundamentos sólidos e consistentes com o perfil de uma empresa de qualidade institucional. Os critérios reprovados merecem acompanhamento, mas o conjunto da análise é favorável.`,
-    `${name} supera a maioria dos parâmetros de referência, sugerindo uma gestão disciplinada e um modelo de negócio robusto. Recomenda-se aprofundar a análise qualitativa antes de qualquer decisão de alocação de capital.`
-  ] : [
-    `Com apenas ${pct}% dos critérios aprovados, ${name} apresenta fragilidades materiais que exigem escrutínio adicional. Pode tratar-se de uma empresa em fase de reestruturação ou com risco operacional elevado.`,
-    `O perfil fundamentalista de ${name} fica aquém dos padrões institucionais. Os critérios reprovados representam riscos concretos a ponderar cuidadosamente antes de qualquer decisão de investimento.`
-  ];
-  document.getElementById('verdictOpinion').textContent = ops[Math.floor(Math.random()*2)];
+  if (criticalFails.length > 0) {
+    riskHTML = `<strong>ALERTA ESTRUTURAL:</strong> A entidade falhou em <b>${criticalFails.length} critério(s) crítico(s)</b> (${criticalFails.join(', ')}). Isto sinaliza uma fragilidade material no modelo de negócio ou balanço. Falhas críticas inviabilizam a alocação de capital sob diretrizes conservadoras, mesmo que os rácios secundários sejam positivos.`;
+    verdictText = "REJEITAR";
+    verdictClass = "verdict-reject";
+  } 
+  else if (normalFails.length > 0) {
+    if (pct >= 70) {
+      riskHTML = `<strong>RISCO MODERADO:</strong> A entidade cumpre com os requisitos centrais, mas apresenta desvios em parâmetros secundários (${normalFails.join(', ')}). Sendo falhas não-críticas, a robustez geral não está comprometida, mas exige acompanhamento no próximo trimestre.`;
+      verdictText = "APROVAR (Buy)";
+      verdictClass = "verdict-approve";
+    } else {
+      riskHTML = `<strong>ALERTA DE DEGRADAÇÃO:</strong> Embora não falhe nos pilares fundamentais, o elevado número de falhas secundárias (${normalFails.join(', ')}) arrasta a taxa de sucesso para patamares inaceitáveis (${pct}%). Os fundamentos não suportam uma tese de investimento segura no momento atual.`;
+      verdictText = "OBSERVAR (Hold)";
+      verdictClass = "verdict-watch";
+    }
+  } 
+  else {
+    riskHTML = `<strong>PERFIL IMACULADO:</strong> A empresa passou em todos os testes inseridos, demonstrando qualidade institucional premium. Indicadores críticos e de eficiência estão perfeitamente alinhados com benchmarks de alta performance financeira.`;
+    verdictText = "FORTE COMPRA";
+    verdictClass = "verdict-approve";
+  }
 
-  document.getElementById('breakdownGrid').innerHTML = breakdown.map(b=>`
-    <div class="bd-item ${b.result}">
-      <div class="bd-icon ${b.result}">${b.result==='pass'?'✓':b.result==='fail'?'✗':'·'}</div>
-      <div>
-        <div class="bd-name">${b.name}</div>
-        <div class="bd-detail">${b.result!=='skip'?`<span class="uval">${b.uval}</span>  ·  `:''}Ideal: ${b.ideal}</div>
-      </div>
-    </div>`).join('');
+  // Update DOM
+  document.getElementById('repCompany').textContent = name;
+  document.getElementById('repSector').textContent = `Setor: ${sector==='bank'?'Instituições Financeiras':'Tecnologia'}`;
+  
+  document.getElementById('statPass').textContent = passed;
+  document.getElementById('statFail').textContent = failed;
+  document.getElementById('statPct').textContent = pct + '%';
+  document.getElementById('statPct').style.color = pct >= 70 ? 'var(--pass)' : (pct < 50 ? 'var(--fail)' : 'var(--warn)');
+
+  document.getElementById('riskAnalysis').innerHTML = riskHTML;
+  
+  const verdictEl = document.getElementById('finalVerdict');
+  verdictEl.textContent = verdictText;
+  verdictEl.className = 'fd-verdict ' + verdictClass;
 
   document.getElementById('results').classList.add('visible');
-  setTimeout(()=>document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(() => document.getElementById('results').scrollIntoView(), 100);
 }
 
 function resetAll() {
